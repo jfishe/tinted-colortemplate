@@ -1,8 +1,9 @@
 # Third-party notices
 
-The colour values in `schemes/` are derived from the Vim colour schemes listed
-below. The converter in `src/` contains no third-party code. Its input format is
-[vim-colortemplate] and its output follows the [Tinted Theming] scheme specs.
+The colour values in `base16/`, `base24/` and `tinted8/` are derived from the
+Vim colour schemes listed below. The converter in `src/` contains no third-party
+code. Its input format is [vim-colortemplate] and its output follows the
+[Tinted Theming] scheme specs.
 
 [vim-colortemplate]: https://codeberg.org/lifepillar/vim-colortemplate
 [Tinted Theming]: https://github.com/tinted-theming/home
@@ -13,7 +14,7 @@ below. The converter in `src/` contains no third-party code. Its input format is
   Lifepillar)
 - Original design: [Solarized](https://ethanschoonover.com/solarized/) by
   Ethan Schoonover
-- Used for: `schemes/*/solarized8*.yaml`
+- Used for: `{base16,base24,tinted8}/solarized8*.yaml`
 - License: MIT
 
 ```text
