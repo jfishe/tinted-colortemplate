@@ -1,4 +1,4 @@
-"""Convert vim-colortemplate colour schemes into tinty custom schemes."""
+"""Convert vim-colortemplate colour schemes into Tinted Theming schemes."""
 
 import argparse
 import subprocess
@@ -117,8 +117,8 @@ def main(argv: list[str] | None = None) -> int:
         "-o",
         "--out",
         type=Path,
-        default=Path(__file__).resolve().parents[2] / "schemes",
-        help="output directory, symlinked as tinty custom-schemes (default: %(default)s)",
+        default=Path(__file__).resolve().parents[2],
+        help="output directory; schemes go in <system>/ under it (default: %(default)s)",
     )
     ap.add_argument(
         "-r",

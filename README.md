@@ -20,16 +20,43 @@ Planned: [vim-wwdc16-theme](https://codeberg.org/lifepillar/vim-wwdc16-theme),
 Scheme names are `<system>-<variant>-<background>`, for example
 `tinted8-solarized8-dark` or `base16-solarized8-flat-light`.
 
-## Using the schemes with tinty
+## Installing
 
-tinty reads custom schemes from `<data-dir>/custom-schemes/<system>/`. Link
-that directory to `schemes/`:
+With tinty 0.35.0 or later, add this repository as an extra scheme repository
+in `~/.config/tinted-theming/tinty/config.toml`:
+
+```toml
+[[schemes.extras]]
+name = "tinted-colortemplate"
+path = "https://github.com/jfishe/tinted-colortemplate"
+```
+
+Then fetch it and apply a scheme:
 
 ```sh
-ln -s "$PWD/schemes" ~/.local/share/tinted-theming/tinty/custom-schemes
-tinty list --custom-schemes
+tinty sync
+tinty list | grep solarized8
 tinty apply tinted8-solarized8-dark
 ```
+
+`tinty update` picks up regenerated schemes. The schemes sit at the repository
+root as `<system>/<slug>.yaml`, the layout tinty expects from an extra.
+
+### Older tinty
+
+Before 0.35.0, tinty only reads extra schemes from
+`<data-dir>/custom-schemes/<system>/`. Clone the repository and link each
+system directory there:
+
+```sh
+git clone https://github.com/jfishe/tinted-colortemplate
+d="$(tinty config --data-dir-path)/custom-schemes"
+mkdir -p "$d"
+for s in base16 base24 tinted8; do ln -sfn "$PWD/tinted-colortemplate/$s" "$d/$s"; done
+tinty list --custom-schemes
+```
+
+### Trying them out
 
 To try the schemes without changing your default ring, add a ring to
 `~/.config/tinted-theming/tinty/config.toml`:
@@ -65,7 +92,9 @@ Then step through it with `tinty cycle --ring solarized8`.
   and git's dim output are drawn in ANSI 8, so they would disappear. Bright
   black is set to the comment grey instead.
 
-## Regenerating
+## Development
+
+### Regenerating
 
 The converter is a [uv](https://docs.astral.sh/uv/) project. Each source
 scheme has a mapping file in `mappings/`. Without `--repo`, the converter makes
@@ -107,23 +136,36 @@ builder derives it.
 
 ### Checking a change
 
-The schemes are only accepted if templates build from them. To build template
-repositories against the generated schemes without applying them, use a
-scratch data directory:
+The schemes are only accepted if templates build from them.
+`scripts/build-check.sh` builds a template repository (tinted-shell by default)
+against the generated schemes in a scratch directory, without applying them.
+It needs
+[tinted-builder-rust](https://github.com/tinted-theming/tinted-builder-rust):
 
 ```sh
-mkdir -p /tmp/tc/repos && cp -r schemes /tmp/tc/repos/schemes
-cp -r ~/.local/share/tinted-theming/tinty/repos/tinted-shell /tmp/tc/
-tinty build -d /tmp/tc /tmp/tc/tinted-shell
+scripts/build-check.sh
+scripts/build-check.sh https://github.com/jfishe/tinted-dircolors
 ```
 
-### Development
+CI runs it on every push and pull request.
+
+### Tests and linting
 
 ```sh
 uv run pytest
 uv run ruff check . && uv run ruff format --check .
 uv run pyrefly check
 ```
+
+### Automation
+
+- [`ci.yml`](.github/workflows/ci.yml) runs the tests, linters and the build
+  check on every push and pull request.
+- [`update.yml`](.github/workflows/update.yml) regenerates the schemes from
+  upstream weekly and on every push to `main` that touches `mappings/` or
+  `src/`, and commits any changes.
+- [Dependabot](.github/dependabot.yml) keeps the Python dependencies and the
+  pinned GitHub Actions up to date.
 
 ## License
 
