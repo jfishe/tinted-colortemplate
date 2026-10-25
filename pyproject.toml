@@ -27,3 +27,7 @@ dev = [
 
 [tool.ruff.lint]
 extend-select = ["I"]
+
+[tool.uv]
+# Match the Dependabot cooldown; uv.lock records this, so CI must see it too.
+exclude-newer = "7 days"
