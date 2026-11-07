@@ -1,11 +1,11 @@
 # tinted-colortemplate
 
 [Tinted Theming](https://github.com/tinted-theming/home) schemes (tinted8,
-base24 and base16) generated from hand-tuned Vim colour schemes written with
+base24 and base16) generated from hand-tuned Vim color schemes written with
 [vim-colortemplate](https://codeberg.org/lifepillar/vim-colortemplate). The
 terminal, dircolors, Windows Terminal, PSReadLine and anything else
 [tinty](https://github.com/tinted-theming/tinty) manages can then match the
-Vim colour scheme.
+Vim color scheme.
 
 ## Schemes
 
@@ -69,10 +69,10 @@ schemes = ["tinted8-solarized8-dark", "tinted8-solarized8-light"]
 
 Then step through it with `tinty cycle --ring solarized8`.
 
-## How the colours are mapped
+## How the colors are mapped
 
-- **tinted8** uses the template's `Term Colors` as its 16-colour palette, so
-  the terminal shows what the scheme expects in 16-colour Vim. UI colours
+- **tinted8** uses the template's `Term Colors` as its 16-color palette, so
+  the terminal shows what the scheme expects in 16-color Vim. UI colors
   (foreground, background, cursor, selection, gutter, ...) and syntax scopes
   come from the default definitions of the Vim highlight groups (`Normal`,
   `Cursor`, `Visual`, `LineNr`, `Comment`, ...).
@@ -88,9 +88,9 @@ Then step through it with `tinty cycle --ring solarized8`.
 ### Deviations from the Vim schemes
 
 - **Solarized, tinted8:** Solarized's ANSI 8 (bright black) is the dark
-  background colour. eza's punctuation (the symlink `->`), zsh-autosuggestions
+  background color. eza's punctuation (the symlink `->`), zsh-autosuggestions
   and git's dim output are drawn in ANSI 8, so they would disappear. Bright
-  black is set to the comment grey instead.
+  black is set to the comment gray instead.
 
 ## Development
 
@@ -123,13 +123,13 @@ first one that resolves is used:
 
 | Spec | Meaning |
 | --- | --- |
-| `#rrggbb` | literal colour |
+| `#rrggbb` | literal color |
 | `term:N` | entry N of the template's `Term Colors` |
-| `Group.fg`, `Group.bg` | colour the highlight group displays, after links, `none` and `reverse` are resolved |
-| `Group.sp` | the group's special (undercurl) colour |
+| `Group.fg`, `Group.bg` | color the highlight group displays, after links, `none` and `reverse` are resolved |
+| `Group.sp` | the group's special (undercurl) color |
 | `Group.hue` | the group's declared foreground, ignoring `reverse` |
 | `@key` | another key of the same table |
-| `name` | a colour defined with `Color: name` |
+| `name` | a color defined with `Color: name` |
 
 A key whose spec resolves to nothing is left out, and the Tinted Theming
 builder derives it.
@@ -169,5 +169,5 @@ uv run pyrefly check
 
 ## License
 
-MIT, see [LICENSE](LICENSE). The scheme colours are derived from third-party
+MIT, see [LICENSE](LICENSE). The scheme colors are derived from third-party
 works, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
