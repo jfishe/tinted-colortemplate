@@ -31,3 +31,8 @@ extend-select = ["I"]
 [tool.uv]
 # Match the Dependabot cooldown; uv.lock records this, so CI must see it too.
 exclude-newer = "7 days"
+
+[tool.rumdl.MD013]
+# Code blocks hold copy-paste config lines that cannot be wrapped.
+code-blocks = false
+tables = false
