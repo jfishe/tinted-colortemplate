@@ -12,10 +12,9 @@ Vim color scheme.
 | Source | Variants | Systems |
 | --- | --- | --- |
 | [vim-solarized8](https://codeberg.org/lifepillar/vim-solarized8) | `solarized8`, `-flat`, `-high`, `-low` × dark, light | tinted8, base24, base16 |
-
-Planned: [vim-wwdc16-theme](https://codeberg.org/lifepillar/vim-wwdc16-theme),
-[vim-wwdc17-theme](https://codeberg.org/lifepillar/vim-wwdc17-theme),
-[vim-gruvbox8](https://codeberg.org/lifepillar/vim-gruvbox8).
+| [vim-gruvbox8](https://codeberg.org/lifepillar/vim-gruvbox8) | `gruvbox8`, `-hard`, `-soft` × dark, light | tinted8, base24, base16 |
+| [vim-wwdc16-theme](https://codeberg.org/lifepillar/vim-wwdc16-theme) | `wwdc16` × dark | tinted8, base24, base16 |
+| [vim-wwdc17-theme](https://codeberg.org/lifepillar/vim-wwdc17-theme) | `wwdc17` × light | tinted8, base24, base16 |
 
 Scheme names are `<system>-<variant>-<background>`, for example
 `tinted8-solarized8-dark` or `base16-solarized8-flat-light`.
@@ -91,6 +90,14 @@ Then step through it with `tinty cycle --ring solarized8`.
   background color. eza's punctuation (the symlink `->`), zsh-autosuggestions
   and git's dim output are drawn in ANSI 8, so they would disappear. Bright
   black is set to the comment gray instead.
+- **WWDC16, tinted8:** the same applies to WWDC16's ANSI 8, which is barely
+  distinguishable from the background. Bright black is the comment gray.
+- **Gruvbox 8, tinted8:** Gruvbox's `ErrorMsg` is the background on red, so
+  `status.error` uses `Error`'s red instead.
+- **base16/base24:** where a scheme has fewer neutrals than base16 needs (the
+  WWDC schemes) or repeats an accent in `Term Colors`, the mapping file picks
+  the closest scheme color. Gruvbox 8's base16 accents are the colors its
+  syntax groups use, as in upstream base16-gruvbox.
 
 ## Development
 

@@ -12,13 +12,17 @@ from pathlib import Path
 
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 META_RE = re.compile(
-    r"^(Full name|Short name|Author|Maintainer|URL|Description):\s*(.*)$"
+    r"^(Full\s+name|Short\s+name|Author|Maintainer|URL|Description):\s*(.*)$"
+)
+COLOR_RE = re.compile(
+    r"^Color:\s*(\S+)\s+(#[0-9a-fA-F]{6}\b|rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|\S+)"
 )
 SKIP_BLOCKS = {
     "verbatim": "endverbatim",
     "auxfile": "endauxfile",
     "documentation": "enddocumentation",
     "help": "endhelp",
+    "helpfile": "endhelpfile",
 }
 
 
@@ -96,15 +100,18 @@ def parse(path: Path) -> Template:
         in_term_colors = False
 
         if m := META_RE.match(line):
-            tpl.meta.setdefault(m.group(1), m.group(2).strip())
+            key = " ".join(m.group(1).split())
+            tpl.meta.setdefault(key, m.group(2).strip())
         elif m := re.match(r"^Background:\s*(\w+)", line):
             section = tpl.sections.setdefault(m.group(1), Section())
-        elif line.startswith("Color:"):
-            name, gui = line.split()[1:3]
-            if not HEX_RE.match(gui):
-                raise ValueError(f"{path}: unsupported GUI color {gui!r} for {name}")
-            section.colors[name] = gui.lower()
-        elif line.startswith("Term Colors:"):
+        elif m := COLOR_RE.match(line):
+            name, gui = m.group(1), _gui_color(m.group(2))
+            if gui is None:
+                raise ValueError(
+                    f"{path}: unsupported GUI color {m.group(2)!r} for {name}"
+                )
+            section.colors[name] = gui
+        elif line.lower().startswith("term colors:"):
             section.term_colors = line.split(":", 1)[1].split()
             in_term_colors = True
         elif line[0].isspace() or line[0] == "/" or ":" in first:
@@ -112,6 +119,17 @@ def parse(path: Path) -> Template:
         else:
             _parse_group(line.split(), section)
     return tpl
+
+
+def _gui_color(value: str) -> str | None:
+    """Return `#rrggbb` for a `#rrggbb` or `rgb(r, g, b)` GUI colour."""
+    if HEX_RE.match(value):
+        return value.lower()
+    if m := re.fullmatch(r"rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)", value):
+        rgb = [int(c) for c in m.groups()]
+        if all(c <= 255 for c in rgb):
+            return "#" + "".join(f"{c:02x}" for c in rgb)
+    return None
 
 
 def _parse_group(tokens: list[str], section: Section) -> None:

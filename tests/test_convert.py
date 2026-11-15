@@ -103,3 +103,38 @@ def test_convert_writes_all_systems(tpl_path: Path, tmp_path: Path) -> None:
     tinted8 = (tmp_path / "out/tinted8/test-scheme-dark.yaml").read_text()
     assert 'red-bright: "#ff0000"' in tinted8
     assert 'status.error: "#ff0000"' in tinted8
+
+
+V3_TEMPLATE = """\
+Full  name: V3 Scheme
+Short name: v3
+helpfile
+Normal red red
+endhelpfile
+
+Background: dark
+Color: bg  rgb(  1, 2,  3) 0 Black
+Color: fg  #FFFFFF 15 White
+Term colors: bg bg bg bg bg bg bg fg
+             bg bg bg bg bg bg bg fg
+Normal fg bg
+"""
+
+
+def test_parse_colortemplate_v3_syntax(tmp_path: Path) -> None:
+    path = tmp_path / "v3.colortemplate"
+    path.write_text(V3_TEMPLATE)
+    tpl = parse(path)
+    assert tpl.meta["Full name"] == "V3 Scheme"
+    dark = tpl.sections["dark"]
+    assert dark.colors == {"bg": "#010203", "fg": "#ffffff"}
+    assert len(dark.term_colors) == 16
+    assert "Normal" not in tpl.sections["any"].groups
+    assert dark.groups["Normal"].fg == "fg"
+
+
+def test_parse_rejects_unknown_gui_color(tmp_path: Path) -> None:
+    path = tmp_path / "bad.colortemplate"
+    path.write_text("Background: dark\nColor: x rgb(256, 0, 0) 0 Black\n")
+    with pytest.raises(ValueError, match="unsupported GUI color"):
+        parse(path)
